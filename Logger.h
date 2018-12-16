@@ -5,7 +5,7 @@ class Logger
 {
 public:
 	Logger() { std::cout << "Vytvoril sa typ:"<< typeid(T).name() << std::endl; } // typeid dava info o triede
-	virtual ~Logger() { std::cout << "Vytvoril sa typ:" << typeid(T).name() << std::endl; }
+	virtual ~Logger() { std::cout << "Vymazal sa typ:" << typeid(T).name() << std::endl; }
 };
 class Auto :  public Logger<Auto>
 {

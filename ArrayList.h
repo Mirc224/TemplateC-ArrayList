@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <cstring>
 #include <cstdint>
+#include <stdexcept>
+#include <iterator>
 
 template <typename T>
 class ArrayList
@@ -70,9 +72,47 @@ public:
 		return size == 0;
 	}
 
-	T* getData()
+	T& operator[](size_t index) { return data[index]; } //nechraneny najrychlejsi
+	T& at(size_t index) 
 	{
-		return this->data;
+		if (index > 0 && index < size)
+			return data[index];
+		throw std::invalid_argument("Invalid index");
+	}
+	class Iterator : std::iterator<std::random_access_iterator_tag, T>  //stary, bude odstraneny asi
+	{
+	public:
+		using iterator_category = std::random_access_iterator_tag;
+		using value_type = T;
+		using difference_type = std::ptrdiff_t;
+		using point = T*;
+		using reference = T & ;
+
+
+		Iterator(T* data,size_t size): index(0), data(data), maxsize(size){} //zakazdym novy iterator
+		Iterator(T* data, size_t size, size_t index) : index(index), data(data), maxsize(size) {}
+
+
+		Iterator& operator++() { ++index; return *this; }
+		Iterator& operator--() { --index; return *this; }
+		Iterator& operator+(size_t offset) { index += offset; index = index > maxsize ? maxsize : index; return *this; }
+		Iterator& operator-(size_t offset) { index -= offset; index = index > maxsize ? maxsize : index; return *this; }
+		bool operator==(const Iterator& rhs) { return this->index == rhs.index && this->data == rhs.data; }
+		bool operator!=(const Iterator& rhs){ return this->index != rhs.index || this->data != rhs.data; }
+		T& operator*() { return data[index]; }
+	private:
+		size_t index;
+		size_t maxsize;
+		T* data;
+	};
+
+	Iterator begin()
+	{
+		return Iterator(this->data, this->size);
+	}
+	Iterator end()
+	{
+		return Iterator(this->data, this->size, this->size); //nastavi na koniec max size
 	}
 private:
 	T* data; // musi byt dynamicke pole

@@ -59,14 +59,22 @@ int main(int argc, char* argv[])
 	//	//najdeny
 	//}
 	//else //nenajdeny
+	Auto();
 	ArrayList<bool> majuPravdu;
 	majuPravdu.add(true);
 	majuPravdu.add(false);
 	majuPravdu.add(true);
-	bool* data = majuPravdu.getData();
 	for (size_t i = 0; i < majuPravdu.getSize(); ++i)
 	{
-		printf("%s", data[i] == true ? "true" : "false");
+		printf("%s", majuPravdu[i] == true ? "true" : "false");
+	}
+	for (auto itr = majuPravdu.begin(); itr != majuPravdu.end(); ++itr)
+	{
+		printf("%s", (*itr) ? "true" : "false");
+	}
+	for (auto &p : majuPravdu)
+	{
+		printf("%s", p ? "true" : "false");
 	}
 
 	return 0;
